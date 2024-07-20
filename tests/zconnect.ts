@@ -1,12 +1,12 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
-import { Zconnect } from "../target/types/zconnect";
+import { zkonnect } from "../target/types/zkonnect";
 
-describe("zconnect", () => {
+describe("zkonnect", () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.AnchorProvider.env());
 
-  const program = anchor.workspace.Zconnect as Program<Zconnect>;
+  const program = anchor.workspace.zkonnect as Program<zkonnect>;
 
   it("Is initialized!", async () => {
     // Add your test here.

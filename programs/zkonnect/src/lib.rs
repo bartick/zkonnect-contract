@@ -6,16 +6,11 @@ pub use states::*;
 pub mod zkonnect_utils;
 pub use zkonnect_utils::*;
 
-declare_id!("DJKkDHARbjNUe2WucgNkwY2dJEFtkMh9urf8dB62cSuP");
+declare_id!("FhiTD4y9iLiDydUmAtM9PgMhryCid3FV9suqyJas9zyi");
 
 #[program]
 pub mod zkonnect {
     use super::*;
-
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        msg!("Greetings from: {:?}", ctx.program_id);
-        Ok(())
-    }
 
     pub fn create_event(
         ctx: Context<CreateEvent>, 
@@ -26,7 +21,8 @@ pub mod zkonnect {
         banner: String,
         date_time: i64,
         location: String,
-        ticket_price: u64
+        ticket_price: u64,
+        total_tickets: u8
     ) -> Result<()> {
         ctx.accounts.create_event(
             seed,
@@ -37,17 +33,19 @@ pub mod zkonnect {
             banner,
             date_time,
             location,
-            ticket_price
+            ticket_price,
+            total_tickets
         );
         Ok(())
     }
 
-    // pub fn pay_for_ticket(ctx: Context<PayForTicket>, ticket_price: u64) -> Result<()> {
-    //     let event = &mut ctx.accounts.event;
-    //     event.ticket_price = ticket_price;
-    //     Ok(())
-    // }
-}
+    pub fn pay_sol_for_ticket(ctx: Context<PaySolForTicket>) -> Result<()> {
+        ctx.accounts.buy_ticket()?;
+        Ok(())
+    }
 
-#[derive(Accounts)]
-pub struct Initialize {}
+    pub fn pay_for_ticket(ctx: Context<PayForTicket>, decimal: u32) -> Result<()> {
+        ctx.accounts.buy_ticket(decimal)?;
+        Ok(())
+    }
+}

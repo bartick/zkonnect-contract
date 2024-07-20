@@ -7,7 +7,7 @@ use anchor_spl::{
 use crate::states::Event;
 
 #[derive(Accounts)]
-#[instruction(creator_name: String)]
+#[instruction(seed: u64)]
 pub struct CreateEvent<'info> {
     #[account(mut)]
     pub creator: Signer<'info>,
@@ -19,7 +19,7 @@ pub struct CreateEvent<'info> {
         init, 
         payer = creator, 
         space = 8 + Event::INIT_SPACE,
-        seeds = [b"zkonnect".as_ref(), creator_name.as_bytes().as_ref(), creator.key().as_ref()],
+        seeds = [b"zkonnect".as_ref(), creator.key().as_ref(), &seed.to_le_bytes()],
         bump
     )]
     pub event: Account<'info, Event>,
@@ -40,6 +40,7 @@ impl<'info> CreateEvent<'info> {
         date_time: i64,
         location: String,
         ticket_price: u64,
+        total_tickets: u8
     ) {
         self.event.set_inner(Event {
             seed,
@@ -53,6 +54,8 @@ impl<'info> CreateEvent<'info> {
             ticket_price,
             mint: self.mint.key(),
             creator: self.creator.key(),
+            tickets_sold: 0,
+            total_tickets,
         });
     }
     

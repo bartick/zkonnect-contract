@@ -1,3 +1,5 @@
+#![allow(clippy::result_large_err)]
+
 use anchor_lang::prelude::*;
 
 pub mod states;
@@ -6,12 +8,13 @@ pub use states::*;
 pub mod zkonnect_utils;
 pub use zkonnect_utils::*;
 
-declare_id!("FhiTD4y9iLiDydUmAtM9PgMhryCid3FV9suqyJas9zyi");
+declare_id!("GnD1KfuNYzxg7y9zxuS9u9cFFzPxQRPfauBKuWogbc5P");
 
 #[program]
 pub mod zkonnect {
     use super::*;
 
+    #[allow(clippy::too_many_arguments)]
     pub fn create_event(
         ctx: Context<CreateEvent>, 
         seed: u64,
@@ -19,7 +22,7 @@ pub mod zkonnect {
         creator_domain: String,
         name: String,
         banner: String,
-        date_time: i64,
+        date_time: u64,
         location: String,
         ticket_price: u64,
         total_tickets: u8

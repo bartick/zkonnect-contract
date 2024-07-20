@@ -11,7 +11,7 @@ pub struct PaySolForTicket<'info> {
     pub to: SystemAccount<'info>,
     #[account(
         mut,
-        seeds=[b"zconnect", to.key().as_ref(), event.seed.to_le_bytes().as_ref()],
+        seeds=[b"zkonnect", to.key().as_ref(), event.seed.to_le_bytes().as_ref()],
         bump = event.bump,
     )]
     pub event: Account<'info, Event>,

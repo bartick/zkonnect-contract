@@ -37,7 +37,7 @@ impl<'info> CreateEvent<'info> {
         creator_domain: String,
         name: String,
         banner: String,
-        date_time: i64,
+        date_time: u64,
         location: String,
         ticket_price: u64,
         total_tickets: u8

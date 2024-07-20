@@ -24,7 +24,7 @@ impl <'info> PaySolForTicket<'info> {
         let transfer_instruction = system_instruction::transfer(
             self.from.key, 
             self.to.key, 
-            self.event.ticket_price
+            self.event.ticket_price * 1000000000,
         );
 
         anchor_lang::solana_program::program::invoke(

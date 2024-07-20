@@ -33,7 +33,6 @@ pub struct PayForTicket<'info> {
     #[account(
         mut,
         has_one = mint,
-        constraint = from_ata.amount >= event.ticket_price,
         seeds=[b"zkonnect", to.key().as_ref(), event.seed.to_le_bytes().as_ref()],
         bump = event.bump,
     )]
@@ -44,10 +43,10 @@ pub struct PayForTicket<'info> {
 }
 
 impl <'info> PayForTicket<'info> {
-    pub fn buy_ticket(&mut self, decimal: u32) -> Result<()> {
+    pub fn buy_ticket(&mut self) -> Result<()> {
         transfer_checked(
             self.into_deposit_context(),
-            self.event.ticket_price * (10 as u64).pow(decimal),
+            self.event.ticket_price,
             self.mint.decimals,
         )?;
 

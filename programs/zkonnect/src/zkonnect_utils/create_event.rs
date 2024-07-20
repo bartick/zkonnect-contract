@@ -19,7 +19,7 @@ pub struct CreateEvent<'info> {
         init, 
         payer = creator, 
         space = 8 + Event::INIT_SPACE,
-        seeds = [b"zkonnect".as_ref(), creator.key().as_ref(), &seed.to_le_bytes()],
+        seeds = [b"zkonnect".as_ref(), creator.key().as_ref(), &seed.to_le_bytes().as_ref()],
         bump
     )]
     pub event: Account<'info, Event>,
@@ -36,11 +36,12 @@ impl<'info> CreateEvent<'info> {
         creator_name: String,
         creator_domain: String,
         name: String,
+        event_description: String,
         banner: String,
         date_time: u64,
         location: String,
         ticket_price: u64,
-        total_tickets: u8
+        total_tickets: u64
     ) {
         self.event.set_inner(Event {
             seed,
@@ -48,6 +49,7 @@ impl<'info> CreateEvent<'info> {
             creator_name,
             creator_domain,
             name,
+            event_description,
             banner,
             date_time,
             location,

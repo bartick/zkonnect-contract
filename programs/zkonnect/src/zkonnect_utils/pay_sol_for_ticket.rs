@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use solana_program::system_instruction;
 
-use crate::Event;
+use crate::{Event, MyError};
 
 #[derive(Accounts)]
 pub struct PaySolForTicket<'info> {
@@ -11,7 +11,7 @@ pub struct PaySolForTicket<'info> {
     pub to: SystemAccount<'info>,
     #[account(
         mut,
-        seeds=[b"zkonnect", to.key().as_ref(), event.seed.to_le_bytes().as_ref()],
+        seeds=[b"zkonnect", to.key().as_ref(), event.name.as_bytes().as_ref()],
         bump = event.bump,
     )]
     pub event: Account<'info, Event>,
@@ -20,6 +20,11 @@ pub struct PaySolForTicket<'info> {
 
 impl <'info> PaySolForTicket<'info> {
     pub fn buy_ticket(&mut self) -> Result<()> {
+
+        require!(self.event.pay_sol == 0, MyError::PaySolNotEnabled);
+
+        require!(self.event.tickets_sold < self.event.total_tickets, MyError::TicketSoldOut);
+
         // Create the transfer instruction
         let transfer_instruction = system_instruction::transfer(
             self.from.key, 

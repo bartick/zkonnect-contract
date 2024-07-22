@@ -5,7 +5,7 @@ use anchor_spl::{
     token_interface::{Mint, TokenInterface},
 };
 
-use crate::Event;
+use crate::{Event, MyError};
 
 #[derive(Accounts)]
 pub struct PayForTicket<'info> {
@@ -33,7 +33,7 @@ pub struct PayForTicket<'info> {
     #[account(
         mut,
         has_one = mint,
-        seeds=[b"zkonnect", to.key().as_ref(), event.seed.to_le_bytes().as_ref()],
+        seeds=[b"zkonnect", to.key().as_ref(), event.name.as_bytes().as_ref()],
         bump = event.bump,
     )]
     pub event: Account<'info, Event>,
@@ -44,6 +44,11 @@ pub struct PayForTicket<'info> {
 
 impl <'info> PayForTicket<'info> {
     pub fn buy_ticket(&mut self) -> Result<()> {
+
+        require!(self.event.pay_sol > 0, MyError::PayOnlySol);
+
+        require!(self.event.tickets_sold < self.event.total_tickets, MyError::TicketSoldOut);
+
         transfer_checked(
             self.into_deposit_context(),
             self.event.ticket_price,

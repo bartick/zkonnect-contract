@@ -7,7 +7,7 @@ use anchor_spl::{
 use crate::states::Event;
 
 #[derive(Accounts)]
-#[instruction(seed: u64)]
+#[instruction(name: String)]
 pub struct CreateEvent<'info> {
     #[account(mut)]
     pub creator: Signer<'info>,
@@ -15,11 +15,13 @@ pub struct CreateEvent<'info> {
         mint::token_program = token_program
     )]
     pub mint: InterfaceAccount<'info, Mint>,
+    #[account(mut)]
+    pub collection_nft: SystemAccount<'info>,
     #[account(
         init, 
         payer = creator, 
         space = 8 + Event::INIT_SPACE,
-        seeds = [b"zkonnect".as_ref(), creator.key().as_ref(), &seed.to_le_bytes().as_ref()],
+        seeds = [b"zkonnect".as_ref(), creator.key().as_ref(), name.as_bytes().as_ref()],
         bump
     )]
     pub event: Account<'info, Event>,
@@ -31,24 +33,23 @@ pub struct CreateEvent<'info> {
 impl<'info> CreateEvent<'info> {
     pub fn create_event(
         &mut self,
-        seed: u64, 
         bumps: &CreateEventBumps,
+        name: String,
         creator_name: String,
         creator_domain: String,
-        name: String,
         event_description: String,
         banner: String,
         date_time: u64,
         location: String,
         ticket_price: u64,
-        total_tickets: u64
+        total_tickets: u8,
+        pay_sol: u8
     ) {
         self.event.set_inner(Event {
-            seed,
             bump: bumps.event,
+            name,
             creator_name,
             creator_domain,
-            name,
             event_description,
             banner,
             date_time,
@@ -56,8 +57,10 @@ impl<'info> CreateEvent<'info> {
             ticket_price,
             mint: self.mint.key(),
             creator: self.creator.key(),
+            collection_nft: self.collection_nft.key(),
             tickets_sold: 0,
             total_tickets,
+            pay_sol
         });
     }
     

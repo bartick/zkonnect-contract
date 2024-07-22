@@ -3,10 +3,10 @@ use anchor_lang::prelude::*;
 #[account]
 #[derive(InitSpace)]
 pub struct Event {
-    pub seed: u64,
     pub bump: u8,
     pub creator: Pubkey,
     pub mint: Pubkey,
+    pub collection_nft: Pubkey,
     #[max_len(504)]
     pub creator_name: String,
     #[max_len(504)]
@@ -21,6 +21,7 @@ pub struct Event {
     #[max_len(504)]
     pub location: String,
     pub ticket_price: u64,
-    pub tickets_sold: u64,
-    pub total_tickets: u64,
+    pub tickets_sold: u8,
+    pub total_tickets: u8,
+    pub pay_sol: u8
 }

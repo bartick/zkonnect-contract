@@ -8,7 +8,7 @@ pub use states::*;
 pub mod zkonnect_utils;
 pub use zkonnect_utils::*;
 
-declare_id!("4DgWhPv3V23cav3LwS5FaxXqxja8zbV58Hw7vhBXEtz4");
+declare_id!("2Wqc5L2npVrhRunpZMEzzby5K9cAEBpSUv2juWb5UPPC");
 
 #[program]
 pub mod zkonnect {
@@ -17,29 +17,29 @@ pub mod zkonnect {
     #[allow(clippy::too_many_arguments)]
     pub fn create_event(
         ctx: Context<CreateEvent>,
-        seed: u64,
+        name: String,
         creator_name: String,
         creator_domain: String,
-        name: String,
         event_description: String,
         banner: String,
         date_time: u64,
         location: String,
         ticket_price: u64,
-        total_tickets: u64,
+        total_tickets: u8,
+        pay_sol: u8,
     ) -> Result<()> {
         ctx.accounts.create_event(
-            seed,
             &ctx.bumps,
+            name,
             creator_name,
             creator_domain,
-            name,
             event_description,
             banner,
             date_time,
             location,
             ticket_price,
             total_tickets,
+            pay_sol
         );
         Ok(())
     }

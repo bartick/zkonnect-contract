@@ -1,13 +1,12 @@
 use anchor_lang::prelude::*;
 use anchor_spl::{
-    associated_token::AssociatedToken,
-    token_interface::{TokenInterface, Mint},
+    associated_token::AssociatedToken, token_interface::{Mint, TokenInterface}
 };
 
 use crate::states::Event;
 
 #[derive(Accounts)]
-#[instruction(name: String)]
+#[instruction(event_name: String)]
 pub struct CreateEvent<'info> {
     #[account(mut)]
     pub creator: Signer<'info>,
@@ -16,12 +15,12 @@ pub struct CreateEvent<'info> {
     )]
     pub mint: InterfaceAccount<'info, Mint>,
     #[account(mut)]
-    pub collection_nft: SystemAccount<'info>,
+    pub collection_nft: InterfaceAccount<'info, Mint>,
     #[account(
         init, 
         payer = creator, 
         space = 8 + Event::INIT_SPACE,
-        seeds = [b"zkonnect".as_ref(), creator.key().as_ref(), name.as_bytes().as_ref()],
+        seeds = [b"zkonnect".as_ref(), creator.key().as_ref(), event_name.as_bytes().as_ref()],
         bump
     )]
     pub event: Account<'info, Event>,
@@ -34,7 +33,7 @@ impl<'info> CreateEvent<'info> {
     pub fn create_event(
         &mut self,
         bumps: &CreateEventBumps,
-        name: String,
+        event_name: String,
         creator_name: String,
         creator_domain: String,
         event_description: String,
@@ -43,11 +42,11 @@ impl<'info> CreateEvent<'info> {
         location: String,
         ticket_price: u64,
         total_tickets: u8,
-        pay_sol: u8
+        pay_sol: u8,
     ) {
         self.event.set_inner(Event {
             bump: bumps.event,
-            name,
+            event_name,
             creator_name,
             creator_domain,
             event_description,
@@ -60,8 +59,7 @@ impl<'info> CreateEvent<'info> {
             collection_nft: self.collection_nft.key(),
             tickets_sold: 0,
             total_tickets,
-            pay_sol
+            pay_sol,
         });
     }
-    
 }

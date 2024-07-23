@@ -12,7 +12,7 @@ pub struct Event {
     #[max_len(504)]
     pub creator_domain: String,
     #[max_len(1004)]
-    pub name: String,
+    pub event_name: String,
     #[max_len(2004)]
     pub event_description: String,
     #[max_len(504)]
@@ -23,5 +23,5 @@ pub struct Event {
     pub ticket_price: u64,
     pub tickets_sold: u8,
     pub total_tickets: u8,
-    pub pay_sol: u8
+    pub pay_sol: u8,
 }

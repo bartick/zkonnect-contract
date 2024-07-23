@@ -33,7 +33,7 @@ pub struct PayForTicket<'info> {
     #[account(
         mut,
         has_one = mint,
-        seeds=[b"zkonnect", to.key().as_ref(), event.name.as_bytes().as_ref()],
+        seeds=[b"zkonnect", to.key().as_ref(), event.event_name.as_bytes().as_ref()],
         bump = event.bump,
     )]
     pub event: Account<'info, Event>,
@@ -42,12 +42,14 @@ pub struct PayForTicket<'info> {
     pub system_program: Program<'info, System>,
 }
 
-impl <'info> PayForTicket<'info> {
+impl<'info> PayForTicket<'info> {
     pub fn buy_ticket(&mut self) -> Result<()> {
-
         require!(self.event.pay_sol > 0, MyError::PayOnlySol);
 
-        require!(self.event.tickets_sold < self.event.total_tickets, MyError::TicketSoldOut);
+        require!(
+            self.event.tickets_sold < self.event.total_tickets,
+            MyError::TicketSoldOut
+        );
 
         transfer_checked(
             self.into_deposit_context(),
@@ -69,5 +71,4 @@ impl <'info> PayForTicket<'info> {
         };
         CpiContext::new(self.token_program.to_account_info(), cpi_accounts)
     }
-    
 }

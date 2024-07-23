@@ -11,24 +11,26 @@ pub struct PaySolForTicket<'info> {
     pub to: SystemAccount<'info>,
     #[account(
         mut,
-        seeds=[b"zkonnect", to.key().as_ref(), event.name.as_bytes().as_ref()],
+        seeds=[b"zkonnect", to.key().as_ref(), event.event_name.as_bytes().as_ref()],
         bump = event.bump,
     )]
     pub event: Account<'info, Event>,
     pub system_program: Program<'info, System>,
 }
 
-impl <'info> PaySolForTicket<'info> {
+impl<'info> PaySolForTicket<'info> {
     pub fn buy_ticket(&mut self) -> Result<()> {
-
         require!(self.event.pay_sol == 0, MyError::PaySolNotEnabled);
 
-        require!(self.event.tickets_sold < self.event.total_tickets, MyError::TicketSoldOut);
+        require!(
+            self.event.tickets_sold < self.event.total_tickets,
+            MyError::TicketSoldOut
+        );
 
         // Create the transfer instruction
         let transfer_instruction = system_instruction::transfer(
-            self.from.key, 
-            self.to.key, 
+            self.from.key,
+            self.to.key,
             self.event.ticket_price * 1000000000,
         );
 
@@ -45,5 +47,4 @@ impl <'info> PaySolForTicket<'info> {
 
         Ok(())
     }
-    
 }

@@ -9,7 +9,7 @@ pub use states::*;
 pub mod zkonnect_utils;
 pub use zkonnect_utils::*;
 
-declare_id!("LF3zzGufxyKgfVWtMmDiK7B7j4kaxmaGy8dU6mnyPNM");
+declare_id!("E4BCyELseNJ2Bu7XimhPEUqV5jBDHteGydfZWF2VYrnR");
 
 #[program]
 pub mod zkonnect {

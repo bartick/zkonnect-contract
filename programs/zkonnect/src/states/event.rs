@@ -6,6 +6,7 @@ pub struct Event {
     pub bump: u8,
     pub creator: Pubkey,
     pub mint: Pubkey,
+    pub merkle_tree: Pubkey,
     pub collection_nft: Pubkey,
     #[max_len(504)]
     pub creator_name: String,

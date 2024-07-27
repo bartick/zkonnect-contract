@@ -1,6 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::{
-    associated_token::AssociatedToken, token_interface::{Mint, TokenInterface}
+    associated_token::AssociatedToken,
+    token_interface::{Mint, TokenInterface},
 };
 
 use crate::states::Event;
@@ -15,7 +16,10 @@ pub struct CreateEvent<'info> {
     )]
     pub mint: InterfaceAccount<'info, Mint>,
     #[account(mut)]
-    pub collection_nft: InterfaceAccount<'info, Mint>,
+    /// CHECK: This is not dangerous because we don't read or write from this account
+    pub merkle_tree: UncheckedAccount<'info>,
+    #[account(mut)]
+    pub collection_nft: InterfaceAccount<'info,Mint>,
     #[account(
         init, 
         payer = creator, 
@@ -56,6 +60,7 @@ impl<'info> CreateEvent<'info> {
             ticket_price,
             mint: self.mint.key(),
             creator: self.creator.key(),
+            merkle_tree: self.merkle_tree.key(),
             collection_nft: self.collection_nft.key(),
             tickets_sold: 0,
             total_tickets,

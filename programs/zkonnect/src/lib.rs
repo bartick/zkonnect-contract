@@ -9,7 +9,7 @@ pub use states::*;
 pub mod zkonnect_utils;
 pub use zkonnect_utils::*;
 
-declare_id!("E4BCyELseNJ2Bu7XimhPEUqV5jBDHteGydfZWF2VYrnR");
+declare_id!("D57msu1skRML54zj1pfZ2fzewCx9UPveeT29hys94jrk");
 
 #[program]
 pub mod zkonnect {
@@ -25,6 +25,7 @@ pub mod zkonnect {
         banner: String,
         date_time: u64,
         location: String,
+        nfturi: String,
         ticket_price: u64,
         total_tickets: u8,
         pay_sol: u8,
@@ -38,6 +39,7 @@ pub mod zkonnect {
             banner,
             date_time,
             location,
+            nfturi,
             ticket_price,
             total_tickets,
             pay_sol,
@@ -69,6 +71,12 @@ pub mod zkonnect {
         for byte in data.deref_mut().iter_mut() {
             *byte = 0;
         }
+
+        // let dst: &mut [u8] = &mut data;
+        // let mut cursor = std::io::Cursor::new(dst);
+        // cursor
+        //     .write_all(&anchor_lang::__private::CLOSED_ACCOUNT_DISCRIMINATOR)
+        //     .unwrap();
 
         Ok(())
     }

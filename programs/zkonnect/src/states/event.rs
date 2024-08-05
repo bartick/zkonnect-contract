@@ -21,6 +21,8 @@ pub struct Event {
     pub date_time: u64,
     #[max_len(504)]
     pub location: String,
+    #[max_len(504)]
+    pub nfturi: String,
     pub ticket_price: u64,
     pub tickets_sold: u8,
     pub total_tickets: u8,
